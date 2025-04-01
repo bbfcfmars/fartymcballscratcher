@@ -1,6 +1,7 @@
 title: Farty McBallscratcher
 description: "Your personal website"
-url: https://bbfcfmars.github.io/fartymcballscratcher
+url: https://bbfcfmars.github.io
+baseurl: /fartymcballscratcher
 
 # Defaults set by GitHub, only need for local serving
 # https://help.github.com/articles/configuring-jekyll/
@@ -17,3 +18,13 @@ kramdown:
 # Include assets directory
 include:
   - assets
+  - _layouts
+  - _includes
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git/

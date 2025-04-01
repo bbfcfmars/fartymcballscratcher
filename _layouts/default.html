@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
             <div class="site-title">
-                <a href="{{ '/' | relative_url }}">Farty McBallscratcher</a>
+                <a href="{{ site.baseurl }}/">Farty McBallscratcher</a>
             </div>
         </header>
 
@@ -24,6 +24,6 @@
         </footer>
     </div>
 
-    <script src="{{ '/assets/js/effects.js' | relative_url }}"></script>
+    <script src="{{ site.baseurl }}/assets/js/effects.js"></script>
 </body>
 </html>
