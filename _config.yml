@@ -1,6 +1,6 @@
-title: Ben Hoyt
-description: "Ben Hoyt's personal website"
-url: https://benhoyt.com/
+title: Farty McBallscratcher
+description: "Your personal website"
+url: https://bbfcfmars.github.io/fartymcballscratcher
 
 # Defaults set by GitHub, only need for local serving
 # https://help.github.com/articles/configuring-jekyll/
@@ -13,3 +13,7 @@ kramdown:
 #gems:
 #  - jekyll-coffeescript
 #  - jekyll-paginate
+
+# Include assets directory
+include:
+  - assets
