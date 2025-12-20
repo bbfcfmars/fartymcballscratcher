@@ -54,6 +54,16 @@ The API will be available at `http://localhost:8000`
 
 ### 3. Verify Installation
 
+**Quick validation (without API key):**
+
+```bash
+./scripts/validate_system.sh
+```
+
+This validates that all services are running correctly.
+
+**Full smoke test (requires API key):**
+
 Run the smoke test:
 
 ```bash

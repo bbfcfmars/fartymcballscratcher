@@ -11,7 +11,9 @@ class QdrantService:
     """Service for Qdrant vector database operations."""
     
     COLLECTION_NAME = "cinema_chunks"
-    VECTOR_SIZE = 1536  # OpenAI ada-002 embedding size
+    # OpenAI text-embedding-ada-002 produces 1536-dimensional vectors
+    # If using a different embedding model, update this value accordingly
+    VECTOR_SIZE = 1536
     
     def __init__(self):
         qdrant_url = os.getenv("QDRANT_URL", "http://localhost:6333")

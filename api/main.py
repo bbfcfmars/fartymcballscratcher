@@ -2,6 +2,7 @@
 
 import uuid
 from typing import Optional, List
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -11,6 +12,15 @@ from models import Source, Chunk
 from chunking import chunk_text
 from openai_service import OpenAIService, get_openai_service
 from qdrant_service import QdrantService, get_qdrant_service
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup and shutdown events."""
+    # Startup
+    init_db()
+    yield
+    # Shutdown (if needed)
 
 
 # Request/Response models
@@ -61,14 +71,9 @@ class IngestResponse(BaseModel):
 app = FastAPI(
     title="CinemaRAG",
     description="Local-first RAG system for filmmaking and storytelling",
-    version="0.1.0"
+    version="0.1.0",
+    lifespan=lifespan
 )
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize database on startup."""
-    init_db()
 
 
 @app.get("/")
