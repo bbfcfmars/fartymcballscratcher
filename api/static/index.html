@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinemaRAG - Film Knowledge System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🎬 CinemaRAG</h1>
+            <p class="subtitle">Your personal film knowledge system</p>
+            <button id="settingsBtn" class="settings-btn">⚙️ Settings</button>
+        </header>
+
+        <!-- API Key Warning -->
+        <div id="apiKeyWarning" class="warning" style="display: none;">
+            ⚠️ OpenAI API key not configured. <a href="#" id="configureKeyLink">Configure now</a>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab active" data-tab="upload">📤 Upload</button>
+            <button class="tab" data-tab="search">🔍 Search</button>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="uploadTab" class="tab-content active">
+            <div class="card">
+                <h2>Upload Document</h2>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label for="file">Choose File</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="file" name="file" accept=".pdf,.docx,.txt,.srt" required>
+                            <div class="file-drop-zone" id="dropZone">
+                                <p>📁 Drag & drop or click to select</p>
+                                <p class="file-info">Supported: PDF, DOCX, TXT, SRT</p>
+                            </div>
+                        </div>
+                        <div id="fileName" class="file-name"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="kind">Document Type *</label>
+                            <select id="kind" name="kind" required>
+                                <option value="">Select type...</option>
+                                <option value="script">Script</option>
+                                <option value="review">Review</option>
+                                <option value="interview">Interview</option>
+                                <option value="lecture">Lecture</option>
+                                <option value="notes">Notes</option>
+                                <option value="subtitle">Subtitle</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="title">Title *</label>
+                            <input type="text" id="title" name="title" placeholder="e.g., Blade Runner Script" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="film">Film Name</label>
+                            <input type="text" id="film" name="film" placeholder="e.g., Blade Runner">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="author">Author</label>
+                            <input type="text" id="author" name="author" placeholder="e.g., Hampton Fancher">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Upload & Process</button>
+                </form>
+
+                <div id="uploadStatus" class="status"></div>
+            </div>
+        </div>
+
+        <!-- Search Tab -->
+        <div id="searchTab" class="tab-content">
+            <div class="card">
+                <h2>Search Documents</h2>
+                <form id="searchForm">
+                    <div class="form-group">
+                        <label for="query">What are you looking for?</label>
+                        <input type="text" id="query" name="query"
+                               placeholder="e.g., What does the opening scene reveal about the world?"
+                               required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="filterFilm">Filter by Film</label>
+                            <input type="text" id="filterFilm" name="filterFilm" placeholder="Optional">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="filterKind">Filter by Type</label>
+                            <select id="filterKind" name="filterKind">
+                                <option value="">All types</option>
+                                <option value="script">Script</option>
+                                <option value="review">Review</option>
+                                <option value="interview">Interview</option>
+                                <option value="lecture">Lecture</option>
+                                <option value="notes">Notes</option>
+                                <option value="subtitle">Subtitle</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="topK">Results</label>
+                            <select id="topK" name="topK">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+
+            <div id="results" class="results"></div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="close-btn" id="closeSettings">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label for="apiKey">OpenAI API Key</label>
+                            <input type="password" id="apiKey" name="apiKey"
+                                   placeholder="sk-...">
+                            <p class="help-text">
+                                Get your API key from
+                                <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>
+                            </p>
+                            <div id="apiKeyStatus"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save API Key</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -4,155 +4,131 @@ A production-quality, local-first RAG (Retrieval-Augmented Generation) system fo
 
 ## Features
 
-- **Intelligent Text Chunking**: Paragraph-aware and screenplay-safe text segmentation
-- **Vector Search**: Fast semantic search powered by Qdrant
+- **Beautiful Web UI**: Simple, intuitive interface - no command-line required
+- **Drag & Drop Upload**: Upload scripts, reviews, interviews, and more
+- **Intelligent Text Chunking**: Screenplay-aware text segmentation
+- **Semantic Search**: Find relevant content across all your documents
 - **Multiple Document Types**: Support for scripts, reviews, interviews, lectures, notes, and subtitles
+- **File Format Support**: PDF, DOCX, TXT, SRT
 - **Citation Support**: Full metadata tracking for proper attribution
-- **API-First**: Clean REST API for easy integration
 - **Local-First**: Runs entirely on your machine (with API-based embeddings)
+
+## Requirements
+
+- Docker Desktop ([Download here](https://www.docker.com/products/docker-desktop))
+- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- 8GB+ RAM recommended
+
+## Quick Start (One-Click!)
+
+### Mac / Linux
+
+1. Double-click `start.sh` or run in terminal:
+   ```bash
+   ./start.sh
+   ```
+
+2. On first run, you'll be prompted to enter your OpenAI API key
+
+3. Your browser will automatically open to `http://localhost:8000/app`
+
+### Windows
+
+1. Double-click `start.bat`
+
+2. On first run, you'll be prompted to enter your OpenAI API key
+
+3. Your browser will automatically open to `http://localhost:8000/app`
+
+That's it! The web interface will guide you through uploading and searching documents.
+
+## Using CinemaRAG
+
+### Upload Documents
+
+1. Click the **Upload** tab
+2. Drag & drop a file or click to select (PDF, DOCX, TXT, SRT)
+3. Choose document type (script, review, interview, etc.)
+4. Add title, film name, and author (optional)
+5. Click **Upload & Process**
+
+### Search Your Library
+
+1. Click the **Search** tab
+2. Enter your question or search query
+3. Optionally filter by film or document type
+4. View results with relevance scores and citations
+
+### Configure API Key
+
+- Click the ⚙️ Settings button
+- Enter your OpenAI API key
+- The key is stored in `.env` for future sessions
 
 ## Architecture
 
+- **Frontend**: Vanilla JavaScript (no framework bloat!)
 - **Backend**: FastAPI
 - **Vector Store**: Qdrant
 - **Database**: PostgreSQL
 - **Embeddings**: OpenAI text-embedding-ada-002
 - **Deployment**: Docker Compose
 
-## Requirements
+## Stopping the System
 
-- Docker Desktop for Mac (with Apple Silicon support)
-- OpenAI API key
-- 18GB+ RAM recommended
-
-## Quick Start
-
-### 1. Set Up Environment
-
-Create a `.env` file in the project root:
+Press `Ctrl+C` in the terminal window, or run:
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key_here
+# Mac/Linux
+docker compose down
+
+# Windows
+docker-compose down
 ```
 
-**Important**: Never commit your `.env` file to git. It's already in `.gitignore`.
+## Advanced: API Access
 
-### 2. Start the System
+The system also provides a REST API for programmatic access.
 
-```bash
-docker compose up --build
-```
+- **Interactive API Docs**: http://localhost:8000/docs
+- **Web UI**: http://localhost:8000/app
+- **Health Check**: http://localhost:8000/health
 
-This will:
-- Start PostgreSQL database
-- Start Qdrant vector store
-- Build and start the FastAPI application
-- Initialize database tables
-- Create Qdrant collection
+### API Endpoints
 
-The API will be available at `http://localhost:8000`
+**Upload File**: `POST /upload`
+- Upload PDF, DOCX, TXT, or SRT files
 
-### 3. Verify Installation
+**Search Text**: `POST /ingest`
+- Ingest text directly (JSON)
 
-**Quick validation (without API key):**
+**Query**: `POST /query`
+- Semantic search across documents
 
-```bash
-./scripts/validate_system.sh
-```
-
-This validates that all services are running correctly.
-
-**Full smoke test (requires API key):**
-
-Run the smoke test:
-
-```bash
-./scripts/smoke_test.sh
-```
-
-This will:
-- Check all services are running
-- Ingest a sample document
-- Query the system
-- Display results
-
-## API Usage
-
-### Ingest a Document
-
-```bash
-curl -X POST http://localhost:8000/ingest \
-  -H "Content-Type: application/json" \
-  -d '{
-    "kind": "script",
-    "title": "Blade Runner Opening Scene",
-    "film": "Blade Runner",
-    "author": "Hampton Fancher, David Peoples",
-    "text": "INT. TYRELL CORPORATION - NIGHT\n\nA vast room lit by ceiling banks... [full text]"
-  }'
-```
-
-**Document Kinds:**
-- `script` - Screenplays and scripts
-- `review` - Film reviews and criticism
-- `interview` - Interviews with filmmakers
-- `lecture` - Educational content and lectures
-- `notes` - General notes and commentary
-- `subtitle` - Film subtitles
-
-### Query Documents
-
-```bash
-curl -X POST http://localhost:8000/query \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "What does the opening scene reveal about the world?",
-    "top_k": 5
-  }'
-```
-
-**Optional filters:**
-- `film`: Filter by specific film name
-- `kind`: Filter by document type
-- `top_k`: Number of results (default: 10)
-
-### Response Format
-
-```json
-{
-  "results": [
-    {
-      "score": 0.89,
-      "text": "INT. TYRELL CORPORATION - NIGHT...",
-      "source_id": 1,
-      "chunk_index": 0,
-      "kind": "script",
-      "title": "Blade Runner Opening Scene",
-      "film": "Blade Runner",
-      "author": "Hampton Fancher, David Peoples",
-      "uri": null
-    }
-  ]
-}
-```
+See full API documentation at http://localhost:8000/docs when running.
 
 ## Project Structure
 
 ```
 .
-├── api/
-│   ├── Dockerfile           # API container definition
-│   ├── pyproject.toml       # Python dependencies
-│   ├── main.py              # FastAPI application
-│   ├── models.py            # SQLAlchemy models
-│   ├── database.py          # Database connection
-│   ├── chunking.py          # Text chunking logic
-│   ├── openai_service.py    # OpenAI integration
-│   └── qdrant_service.py    # Qdrant integration
-├── scripts/
-│   └── smoke_test.sh        # Smoke test script
+├── start.sh                 # 🚀 One-click startup (Mac/Linux)
+├── start.bat                # 🚀 One-click startup (Windows)
 ├── docker-compose.yml       # Service orchestration
-└── README.md                # This file
+├── api/
+│   ├── static/              # Web UI files
+│   │   ├── index.html       # Main UI
+│   │   ├── style.css        # Styling
+│   │   └── app.js           # JavaScript
+│   ├── main.py              # FastAPI application & endpoints
+│   ├── models.py            # Database models
+│   ├── chunking.py          # Intelligent text chunking
+│   ├── file_utils.py        # File processing (PDF, DOCX, etc.)
+│   ├── openai_service.py    # OpenAI embeddings integration
+│   ├── qdrant_service.py    # Vector database client
+│   └── requirements.txt     # Python dependencies
+└── scripts/
+    ├── smoke_test.sh        # End-to-end test
+    └── validate_system.sh   # System validation
 ```
 
 ## Development
@@ -208,37 +184,37 @@ If Docker runs out of memory:
 1. Increase Docker Desktop memory allocation to 8GB+
 2. Close other applications
 
-## Design Philosophy
+## How It Works
 
-### Chunking Strategy
+### Intelligent Chunking
 
 - **Screenplays**: Preserves scene boundaries and dialogue structure
-- **General Text**: Paragraph-aware with configurable overlap
-- **Size**: ~1000 characters per chunk with 100-character overlap
-- **Context**: Overlap ensures continuity for semantic search
+- **General Text**: Paragraph-aware segmentation
+- **Overlap**: 100-character overlap between chunks for context continuity
 
-### Citation Support
+### Citation & Metadata
 
-Every chunk includes:
-- Source document metadata (title, film, author, URI)
-- Chunk position within source
+Every search result includes:
+- Source document (title, film, author)
+- Document type (script, review, etc.)
+- Relevance score (0-100%)
 - Original text for direct quotation
 
-### Error Handling
+### Privacy & Data
 
-- Clear error messages when API key is missing
-- Graceful degradation
-- No silent failures
-- All errors logged
+- All data stored locally on your machine
+- Only embeddings sent to OpenAI API
+- No cloud storage or external databases
+- You control your data
 
 ## Future Enhancements
 
 - Advanced screenplay parsing (character arcs, scene detection)
 - Multi-modal support (images, audio transcripts)
-- Custom embedding models
-- Local LLM support
-- Web UI
+- Custom embedding models (local alternatives to OpenAI)
+- Local LLM support for query generation
 - Bulk import tools
+- Export/backup functionality
 
 ## License
 
