@@ -74,7 +74,14 @@ def chunk_screenplay(text: str, max_chunk_size: int = 1000, overlap: int = 100) 
                                 chunk_piece = sent[i:i + max_chunk_size]
                                 if current_chunk:
                                     chunks.append(current_chunk)
-                                current_chunk = chunk_piece
+                                    current_chunk = ""
+                                # Append the piece directly since it's already at max size
+                                if i + max_chunk_size < len(sent):
+                                    # Not the last piece, append immediately
+                                    chunks.append(chunk_piece)
+                                else:
+                                    # Last piece, set as current_chunk
+                                    current_chunk = chunk_piece
                         elif len(current_chunk) + len(sent) + 1 <= max_chunk_size:
                             current_chunk = (current_chunk + " " + sent).strip()
                         else:
