@@ -1,7 +1,6 @@
 """Qdrant vector database integration."""
 
 import os
-import uuid
 from typing import List, Optional, Dict, Any
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue

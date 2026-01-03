@@ -62,8 +62,27 @@ def chunk_screenplay(text: str, max_chunk_size: int = 1000, overlap: int = 100) 
                 else:
                     current_chunk = para
             else:
-                # Paragraph itself is too large, split it
-                current_chunk = para
+                # Paragraph itself is too large, need to split it
+                if len(para) > max_chunk_size:
+                    # Split large paragraph by sentences
+                    sentences = re.split(r'(?<=[.!?])\s+', para)
+                    for sent in sentences:
+                        # If sentence itself is too large, force split by chunk size
+                        if len(sent) > max_chunk_size:
+                            # Split into max_chunk_size pieces as last resort
+                            for i in range(0, len(sent), max_chunk_size):
+                                chunk_piece = sent[i:i + max_chunk_size]
+                                if current_chunk:
+                                    chunks.append(current_chunk)
+                                current_chunk = chunk_piece
+                        elif len(current_chunk) + len(sent) + 1 <= max_chunk_size:
+                            current_chunk = (current_chunk + " " + sent).strip()
+                        else:
+                            if current_chunk:
+                                chunks.append(current_chunk)
+                            current_chunk = sent
+                else:
+                    current_chunk = para
     
     # Add final chunk
     if current_chunk:
